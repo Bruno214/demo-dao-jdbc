@@ -1,8 +1,6 @@
 package db;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class DB {
     private final static String URL = "jdbc:mysql://localhost:3306/coursejdbc";
@@ -30,6 +28,19 @@ public class DB {
     public static void closeConnection() {
         if (conn != null) {
             try {
+                conn.close();
+                System.out.println("Conexão fechada");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static void closeConnection(Statement statement, ResultSet resultSet) {
+        if (conn != null && statement != null && resultSet != null) {
+            try {
+                statement.close();
+                resultSet.close();
                 conn.close();
                 System.out.println("Conexão fechada");
             } catch (SQLException e) {
