@@ -53,21 +53,10 @@ public class SellerDaoJDBC implements SellerDao {
             // executando a query
             resultSet = preparedStatement.executeQuery();
 
-            // verificando se tenho o id buscado no banco de dados
+            // verificando se tenho o id buscado no banco de dados, se tenho o retorno
             if (resultSet.next()) {
-                Department dep = new Department();
-                dep.setId(resultSet.getInt("DepartmentId"));
-                dep.setName(resultSet.getString("DepName"));
-
-                Seller seller = new Seller();
-                seller.setId(resultSet.getInt("Id"));
-                seller.setName(resultSet.getString("Name"));
-                seller.setEmail(resultSet.getString("Email"));
-                seller.setBirthDate(resultSet.getDate("BirthDate"));
-                seller.setBaseSalary(resultSet.getDouble("BaseSalary"));
-                seller.setDepartment(dep);
-
-                return seller;
+                Department dep = instantiateDepartment(resultSet);
+                return instantiateSeller(resultSet, dep);
             }
             // retornado null pois não foi encontrado o vendedor na base de dados
             return null;
@@ -76,6 +65,27 @@ public class SellerDaoJDBC implements SellerDao {
         }finally {
             DB.closeConnection(preparedStatement, resultSet);
         }
+    }
+
+    // metodo auxiliar para fazer a instanciação de um objeto Department
+    private Department instantiateDepartment(ResultSet resultSet) throws SQLException {
+        Department dep = new Department();
+        dep.setId(resultSet.getInt("DepartmentId"));
+        dep.setName(resultSet.getString("DepName"));
+        return dep;
+    }
+
+    // metodo auxiliar para fazer a instanciação de um objeto seller
+    private Seller instantiateSeller(ResultSet resultSet, Department dep) throws SQLException {
+        Seller seller = new Seller();
+
+        seller.setId(resultSet.getInt("Id"));
+        seller.setName(resultSet.getString("Name"));
+        seller.setEmail(resultSet.getString("Email"));
+        seller.setBirthDate(resultSet.getDate("BirthDate"));
+        seller.setBaseSalary(resultSet.getDouble("BaseSalary"));
+        seller.setDepartment(dep);
+        return seller;
     }
 
     @Override
