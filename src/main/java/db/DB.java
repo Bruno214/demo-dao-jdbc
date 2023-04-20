@@ -36,12 +36,24 @@ public class DB {
         }
     }
 
-    public static void closeConnection(Statement statement, ResultSet resultSet) {
+    public static void closeConnection(Connection conn, Statement statement, ResultSet resultSet) {
         if (conn != null && statement != null && resultSet != null) {
             try {
                 statement.close();
                 resultSet.close();
                 conn.close();
+                System.out.println("Conexão fechada");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static void closeConnection(Statement statement, ResultSet resultSet) {
+        if (statement != null && resultSet != null) {
+            try {
+                statement.close();
+                resultSet.close();
                 System.out.println("Conexão fechada");
             } catch (SQLException e) {
                 throw new RuntimeException(e);

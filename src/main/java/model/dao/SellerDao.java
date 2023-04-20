@@ -1,5 +1,6 @@
 package model.dao;
 
+import model.entities.Department;
 import model.entities.Seller;
 
 import java.util.List;
@@ -17,6 +18,8 @@ public interface SellerDao {
 
     // faz uma pesquisa no banco de dados por id, e retorna este departamento
     Seller findById(int id);
+
+    public List<Seller> findByDepartment(Department department);
 
     // retorna uma lista de Departamentos
     List<Seller> findAll();
