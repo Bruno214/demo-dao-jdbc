@@ -6,6 +6,7 @@ import model.dao.DepartmentDao;
 import model.entities.Department;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DepartmentDaoJDBC implements DepartmentDao {
@@ -66,8 +67,29 @@ public class DepartmentDaoJDBC implements DepartmentDao {
         return dep;
     }
 
+    // retornar a lista de todos os departamentos no banco de dados
     @Override
     public List<Department> findAll() {
-        return null;
+        preparedStatement = null;
+        resultSet = null;
+
+        try {
+            String sql = "SELECT * FROM department;";
+            preparedStatement = conn.prepareStatement(sql);
+
+            resultSet = preparedStatement.executeQuery();
+            List<Department> listDeps = new ArrayList<>();
+            Department dep;
+            while(resultSet.next()) {
+                dep = instantiateDepartment(resultSet);
+                listDeps.add(dep);
+            }
+            return listDeps;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally {
+            DB.closeConnection(preparedStatement, resultSet);
+        }
     }
 }
