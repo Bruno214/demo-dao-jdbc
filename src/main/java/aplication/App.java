@@ -27,7 +27,7 @@ public class App {
 
 
         System.out.println("\n=== TEST 2: seller findByDepartment ===");
-        Department department = new Department(1, "Computers");
+        Department department = new Department(2, "Computers");
         List<Seller> sellers = sellerDao.findByDepartment(department);
 
         for (Seller obj : sellers) {
@@ -49,12 +49,21 @@ public class App {
             Seller testeSeller = new Seller(1,"Fernanda Silva", "fernanda@gmail.com",
                     new Date(data.parse("10/09/1999").getTime()), 5000,department);
 
-            sellerDao.insert(testeSeller);
-            System.out.println(testeSeller.getId());
+            //sellerDao.insert(testeSeller);
+          //  System.out.println(testeSeller.getId());
 
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
 
+
+        System.out.println("\n=== TEST 5: seller update ===");
+
+        Seller testeSeller = sellerDao.findById(13);
+        if (testeSeller != null) {
+            testeSeller.setName("Marta Waine");
+            sellerDao.update(testeSeller);
+            System.out.println("update Completed!");
+        }
     }
 }
