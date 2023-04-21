@@ -12,6 +12,7 @@ O projeto possui uma interface DAO para cada entidade, definindo as operações 
  - Java
  - MySQL
  - JDBC
+ - Maven
 ## Como utilizar 🤔
  1. Clone o repositório em sua máquina local
  2. Execute o script create_database.sql no seu banco de dados MySQL para criar as tabelas e dados iniciais
