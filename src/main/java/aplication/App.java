@@ -1,6 +1,7 @@
 package aplication;
 
 
+import db.DB;
 import model.dao.DaoFactory;
 import model.dao.SellerDao;
 import model.entities.Department;
@@ -68,5 +69,7 @@ public class App {
 
         System.out.println("\n=== TEST 5: seller delete ===");
         sellerDao.deleteById(13);
+
+        DB.closeConnection();
     }
 }
