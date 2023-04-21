@@ -6,7 +6,9 @@ import model.dao.SellerDao;
 import model.entities.Department;
 import model.entities.Seller;
 
-import java.util.ArrayList;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class App {
@@ -25,7 +27,7 @@ public class App {
 
 
         System.out.println("\n=== TEST 2: seller findByDepartment ===");
-        Department department = new Department(2, null);
+        Department department = new Department(1, "Computers");
         List<Seller> sellers = sellerDao.findByDepartment(department);
 
         for (Seller obj : sellers) {
@@ -38,5 +40,21 @@ public class App {
         for(Seller obj : sellers) {
             System.out.println(obj);
         }
+
+        System.out.println("\n=== TEST 4: seller insert ===");
+        SimpleDateFormat data = new SimpleDateFormat("dd/MM/yyyy");
+
+
+        try {
+            Seller testeSeller = new Seller(1,"Fernanda Silva", "fernanda@gmail.com",
+                    new Date(data.parse("10/09/1999").getTime()), 5000,department);
+
+            sellerDao.insert(testeSeller);
+            System.out.println(testeSeller.getId());
+
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

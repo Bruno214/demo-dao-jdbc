@@ -23,9 +23,43 @@ public class SellerDaoJDBC implements SellerDao {
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
 
+    // inserir um novo vendedor no banco de dados
     @Override
     public void insert(Seller seller) {
+        preparedStatement = null;
+        resultSet = null;
 
+
+        try {
+            String sql = "INSERT INTO seller (Name, Email, BirthDate, BaseSalary, DepartmentId) " +
+                    "values (?, ?, ?, ?, ?)";
+
+            preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            preparedStatement.setString(1, seller.getName());
+            preparedStatement.setString(2, seller.getEmail());
+            preparedStatement.setDate(3,new Date(seller.getBirthDate().getTime()));
+            preparedStatement.setDouble(4, seller.getBaseSalary());
+            preparedStatement.setInt(5, seller.getDepartment().getId());
+
+            int rows = preparedStatement.executeUpdate();
+
+            if (rows > 0) {
+                resultSet = preparedStatement.getGeneratedKeys();
+                if (resultSet.next()) {
+                    int id = resultSet.getInt(1);
+                    seller.setId(id);
+                }
+
+            }else {
+                throw new DbException("Unexpected error! no rows affected!");
+            }
+
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        }finally {
+           DB.closeConnection(preparedStatement, resultSet);
+        }
     }
 
     @Override
@@ -134,7 +168,7 @@ public class SellerDaoJDBC implements SellerDao {
     // listar todos os vendedores
     @Override
     public List<Seller> findAll() {
-        Statement statement = null;
+        preparedStatement = null;
         resultSet = null;
 
         try {
@@ -144,8 +178,8 @@ public class SellerDaoJDBC implements SellerDao {
                     "INNER JOIN department " +
                     "on seller.DepartmentId = department.Id " +
                     "order by seller.Name;";
-            statement = conn.createStatement();
-            resultSet = statement.executeQuery(sql);
+            preparedStatement = conn.prepareStatement(sql);
+            resultSet = preparedStatement.executeQuery();
 
             List<Seller> sellers = new ArrayList<>();
             Map<Integer, Department> map = new HashMap<>();
@@ -167,7 +201,7 @@ public class SellerDaoJDBC implements SellerDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            DB.closeConnection(statement, resultSet);
+            DB.closeConnection(preparedStatement, resultSet);
         }
     }
 }
