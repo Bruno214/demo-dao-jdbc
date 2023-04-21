@@ -23,8 +23,14 @@ public class app2 {
 
         System.out.println("=== TEST 3: department insert ===");
         Department department = new Department(0, "Music");
-        departmentDao.insert(department);
+      //  departmentDao.insert(department);
         System.out.println("Inserted! new id: " + department.getId());
+
+        System.out.println("=== TEST 4: department update ===");
+        Department dep2 = departmentDao.findById(10);
+        dep2.setName("Food");
+        departmentDao.update(dep2);
+        System.out.println("Update completed");
 
     }
 }
