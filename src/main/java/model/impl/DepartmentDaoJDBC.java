@@ -20,7 +20,33 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
     @Override
     public void insert(Department department) {
+        preparedStatement = null;
+        resultSet = null;
 
+        try {
+            String sql = "INSERT INTO department (Name) values ( ? )";
+
+            preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1,department.getName());
+
+            int rows = preparedStatement.executeUpdate();
+
+            if (rows > 0) {
+                resultSet = preparedStatement.getGeneratedKeys();
+                if (resultSet.next()) {
+                    int id = resultSet.getInt(1);
+                    department.setId(id);
+                }
+
+            } else {
+                throw new DbException("Unexpected error! no rows affected!");
+            }
+
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        }finally {
+            DB.closeConnection(preparedStatement, resultSet);
+        }
     }
 
     @Override
