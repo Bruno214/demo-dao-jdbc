@@ -59,11 +59,14 @@ public class App {
 
         System.out.println("\n=== TEST 5: seller update ===");
 
-        Seller testeSeller = sellerDao.findById(13);
+        Seller testeSeller = sellerDao.findById(17);
         if (testeSeller != null) {
             testeSeller.setName("Marta Waine");
             sellerDao.update(testeSeller);
             System.out.println("update Completed!");
         }
+
+        System.out.println("\n=== TEST 5: seller delete ===");
+        sellerDao.deleteById(13);
     }
 }

@@ -90,9 +90,30 @@ public class SellerDaoJDBC implements SellerDao {
         }
     }
 
+    // Deletar um vendedor do banco por id
     @Override
     public void deleteById(int id) {
-        System.out.println("apaguei o id: " + id);
+        preparedStatement = null;
+
+        try {
+            //preparando o comando em sql para deletar no banco de dados
+            String sql = "DELETE  FROM seller WHERE Id = ?";
+            preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setInt(1, id);
+
+            int rows = preparedStatement.executeUpdate();
+            if (rows > 0) {
+                System.out.println("Rows affected " + rows);
+            } else {
+                throw new DbException("ERROR! the ID is not in the database");
+            }
+
+
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        } finally {
+            DB.closeConnection(preparedStatement);
+        }
     }
 
 
