@@ -1,11 +1,13 @@
 package aplication;
 
+import db.DbException;
 import model.dao.DaoFactory;
 import model.dao.DepartmentDao;
 import model.entities.Department;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class app2 {
     public static void main(String[] args) {
@@ -27,10 +29,23 @@ public class app2 {
         System.out.println("Inserted! new id: " + department.getId());
 
         System.out.println("=== TEST 4: department update ===");
-        Department dep2 = departmentDao.findById(10);
-        dep2.setName("Food");
-        departmentDao.update(dep2);
-        System.out.println("Update completed");
+        Department dep2 = departmentDao.findById(1);
+        if (dep2 != null) {
+            dep2.setName("Food");
+            departmentDao.update(dep2);
+            System.out.println("Update completed");
+        }else {
+            throw new DbException("ERROR! Department not found");
+        }
+
+
+        System.out.println("=== TEST 5: department delete ===");
+        Scanner scan = new Scanner(System.in);
+
+        System.out.print("Informe um id par excuir no banco de dados: ");
+        int id = scan.nextInt();
+        departmentDao.deleteById(id);
+        System.out.println("Delete completed");
 
     }
 }

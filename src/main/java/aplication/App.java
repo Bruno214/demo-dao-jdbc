@@ -50,7 +50,7 @@ public class App {
             Seller testeSeller = new Seller(1,"Fernanda Silva", "fernanda@gmail.com",
                     new Date(data.parse("10/09/1999").getTime()), 5000,department);
 
-            //sellerDao.insert(testeSeller);
+          //  sellerDao.insert(testeSeller);
           //  System.out.println(testeSeller.getId());
 
         } catch (ParseException e) {

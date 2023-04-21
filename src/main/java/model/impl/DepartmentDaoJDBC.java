@@ -2,6 +2,7 @@ package model.impl;
 
 import db.DB;
 import db.DbException;
+import db.DbIntegrityException;
 import model.dao.DepartmentDao;
 import model.entities.Department;
 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DepartmentDaoJDBC implements DepartmentDao {
-    private Connection conn;
+    private final Connection conn;
     private PreparedStatement preparedStatement;
     private ResultSet resultSet;
 
@@ -61,7 +62,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
             preparedStatement.setInt(2, department.getId());
 
             preparedStatement.executeUpdate();
-           
+
 
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
@@ -72,7 +73,24 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
     @Override
     public void deleteById(int id) {
+        preparedStatement = null;
 
+        try {
+            String sql = "DELETE from department WHERE Id = ?";
+            preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+
+            int rows = preparedStatement.executeUpdate();
+            if (rows == 0) {
+                throw new DbException("ERROR! the ID is not in the database");
+            }
+
+
+        } catch (SQLException e) {
+            throw new DbException("Could not delete record due to an integrity constraint.");
+        }finally {
+            DB.closeConnection(preparedStatement);
+        }
     }
 
     @Override
